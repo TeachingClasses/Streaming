@@ -1,4 +1,4 @@
-package com.stream.stream.tiyyagura;
+package com.reservation.airlines;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
