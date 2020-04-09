@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
+
 @Repository
 public class FlightRepositoryImpl implements FlightRepository {
 
@@ -28,19 +29,25 @@ public class FlightRepositoryImpl implements FlightRepository {
     @Override
     public List<Map.Entry<Integer, Flight>> searchFlight(Flight flight) {
 
-        List<Map.Entry<Integer, Flight>> list = flightMap.entrySet().stream()
+        //Filtering the flights by org, destination and startDate
+        List<Map.Entry<Integer, Flight>> filteredFlightList = flightMap.entrySet().stream()
                 .filter(x -> flight.getOrigin().equals(x.getValue().getOrigin()))
                 .filter(x -> flight.getDestination().equals(x.getValue().getDestination()))
                 .filter(x -> flight.getStartDate().equals(x.getValue().getStartDate()))
                 .collect(Collectors.toList());
 
-        /*flight.setFlightNbr(345);
-        Double fare = new Double(100.00);
-        flight.setFare(fare);
-        if (new Date(flight.getStartDate()).getMonth() > 10) {
-            fare = fare + (fare * 20 / 100);
-            flight.setFare(fare);
-        }*/
-        return list;
+        // Applying fare updates to the filterFlights
+            for (Map.Entry<Integer, Flight> flightMap : filteredFlightList) {
+
+            Flight filteredFlight = flightMap.getValue();
+            if (filteredFlight.getStartDate() != null &&
+                    filteredFlight.getStartDate().getMonth() >= 10) {
+
+                Double fare = filteredFlight.getFare();
+                fare = fare + (fare * 20 / 100);
+                filteredFlight.setFare(fare);
+            }
+        }
+        return filteredFlightList;
     }
 }
